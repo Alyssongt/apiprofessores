@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+ <script src="script.js" type="module"></script>
+
+
+  <style>
+  body { margin:0; font-family:'Arial', sans-serif; background:#f5f5f5; color:#333; }
+  header { background:#4caf50; color:white; text-align:center; padding:20px; }
+  header h1 { margin:0; font-size:2rem; }
+  header p { margin:5px 0 0 0; }
+
+  .container { width:90%; max-width:1200px; margin:20px auto; display:flex; flex-direction:column; gap:20px; }
+  .welcome { background:white; padding:20px; border-radius:12px; box-shadow:0 3px 10px rgba(0,0,0,0.1); font-weight:bold; font-size:1.2rem; text-align:center; }
+
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
+  .card { background:white; padding:20px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1); cursor:pointer; transition:transform 0.2s; text-align:center; }
+  .card:hover { transform:scale(1.05); }
+  .card h2 { margin-bottom:10px; font-size:1.2rem; }
+  .card p { font-size:0.9rem; color:#555; }
+
+  section.formulario { display:none; flex-direction:column; gap:15px; background:white; padding:25px; border-radius:12px; box-shadow:0 3px 10px rgba(0,0,0,0.1); }
+  label { display:flex; flex-direction:column; font-weight:bold; }
+  input, select, textarea, button { margin-top:5px; padding:10px; border-radius:8px; border:1px solid #ccc; font-size:1rem; }
+  button { background:#4caf50; color:white; border:none; cursor:pointer; transition:0.3s; }
+  button:hover { background:#45a049; }
+  .resultado { display:none; padding:15px; background:#e8f5e9; border:1px solid #c8e6c9; border-radius:8px; white-space:pre-wrap; font-size:0.95rem; margin-top:10px; }
+</style>
+</head>
+<body>
+
+
+
+<div class="container">
+  <div class="welcome">Olá, professora Raimunda souto, aqui está suas ferramentas educacionais 👋</div>
+
+  <div class="cards">
+    <div class="card" onclick="mostrarFormulario('atividadeForm')">
+      <h2>✍️ Gerar Atividades</h2><p>Português, Matemática, Ciências e mais</p>
+    </div>
+    <div class="card" onclick="mostrarFormulario('correcaoForm')">
+      <h2>✉️ Corrigir Tarefas</h2><p>Correção automática com IA</p>
+    </div>
+    <div class="card" onclick="mostrarFormulario('planejamentoForm')">
+      <h2>📅 Planejar Aula</h2><p>Objetivos, metodologia e recursos</p>
+    </div>
+    <div class="card" onclick="mostrarFormulario('turmasForm')">
+      <h2>👥 Gerenciar Turmas</h2><p>Cadastro, frequência e relatórios</p>
+    </div>
+    <div class="card" onclick="mostrarFormulario('bancoForm')">
+      <h2>📚 Banco de Questões</h2><p>Salvar, buscar e reutilizar atividades</p>
+    </div>
+    <div class="card" onclick="mostrarFormulario('provasForm')">
+      <h2>📝 Geração de Provas</h2><p>Provas automáticas com versões A e B</p>
+    </div>
+    <div class="card" onclick="mostrarFormulario('agendaForm')">
+      <h2>📆 Agenda Automática</h2><p>Datas de provas e alertas</p>
+    </div>
+    <div class="card" onclick="mostrarFormulario('comunicacaoForm')">
+      <h2>💬 Comunicação com Responsáveis</h2><p>Mensagens automáticas e notificações</p>
+    </div>
+    <div class="card" onclick="mostrarFormulario('bibliotecaForm')">
+      <h2>📖 Biblioteca Inteligente</h2><p>Materiais sugeridos para aulas</p>
+    </div>
+    <div class="card" onclick="mostrarFormulario('exportarForm')">
+      <h2>📤 Exportar Turmas</h2><p>Relatórios em Excel e PDF</p>
+    </div>
+  </div>
+
+  <!-- FORMULÁRIOS -->
+  <section id="atividadeForm" class="formulario">
+    <h2>Gerar Atividade</h2>
+    <label>Ano:<select id="ano"><option>1º ano</option><option>2º ano</option><option>3º ano</option><option>4º ano</option><option>5º ano</option></select></label>
+    <label>Matéria:<select id="materia"><option>Português</option><option>Matemática</option><option>Ciências</option><option>História</option><option>Geografia</option></select></label>
+    <label>Tipo:<select id="tipo"><option>Interpretação de texto</option><option>Múltipla escolha</option><option>Problemas matemáticos</option><option>Completar frases</option></select></label>
+    <button onclick="gerarAtividade()">Gerar Atividade</button>
+  </section>
+
+  <section id="correcaoForm" class="formulario">
+    <h2>Corrigir Tarefa</h2>
+    <label>Resposta do Aluno:<textarea id="respostaAluno" rows="5"></textarea></label>
+    <label>Gabarito:<textarea id="gabarito" rows="3"></textarea></label>
+    <button onclick="corrigirTarefa()">Corrigir</button>
+  </section>
+
+<section id="planejamentoForm" class="formulario">
+  <h2>Planejar Aula</h2>
+  <label>Série/Ano:
+    <select id="anoPlanejamento">
+      <option>1º ano</option>
+      <option>2º ano</option>
+      <option>3º ano</option>
+      <option>4º ano</option>
+      <option>5º ano</option>
+    </select>
+  </label>
+  <label>Matéria:
+    <select id="materiaPlanejamento">
+      <option>Português</option>
+      <option>Matemática</option>
+      <option>Ciências</option>
+      <option>História</option>
+      <option>Geografia</option>
+    </select>
+  </label>
+  <label>Semana:<input type="text" id="semanaPlanejamento" placeholder="Ex: 1,2,3..." /></label>
+  <button onclick="planejarAula()">Gerar Planejamento</button>
+</section>
+
+
+  <section id="turmasForm" class="formulario">
+    <h2>Gerenciar Turmas</h2>
+    <label>Nome da Turma:<input type="text" id="nomeTurma"/></label>
+    <button onclick="gerenciarTurmas()">Salvar Turma</button>
+  </section>
+
+  <section id="bancoForm" class="formulario">
+    <h2>Banco de Questões</h2>
+    <label>Questão:<textarea id="questaoBanco" rows="4"></textarea></label>
+    <label>Disciplina:<select id="disciplinaBanco"><option>Português</option><option>Matemática</option><option>Ciências</option></select></label>
+    <button onclick="salvarQuestao()">Salvar Questão</button>
+  </section>
+
+  <section id="provasForm" class="formulario">
+  <h2>Gerar Prova</h2>
+  <label>Turma:<input type="text" id="turmaProva"/></label>
+  <label>Série/Ano:
+    <select id="anoProva">
+      <option>1º ano</option>
+      <option>2º ano</option>
+      <option>3º ano</option>
+      <option>4º ano</option>
+      <option>5º ano</option>
+    </select>
+  </label>
+  <label>Matéria:
+    <select id="materiaProva">
+      <option>Português</option>
+      <option>Matemática</option>
+      <option>Ciências</option>
+      <option>História</option>
+      <option>Geografia</option>
+    </select>
+  </label>
+  <label>Quantidade de questões:<input type="number" id="quantQuestoes" min="1"/></label>
+  <button onclick="gerarProva()">Gerar Prova</button>
+  <button type="button" onclick="gerarPDFProva()">Gerar PDF da Prova</button>
+</section>
+
+
+  <section id="agendaForm" class="formulario">
+    <h2>Agenda Automática</h2>
+    <label>Evento:<input type="text" id="evento"/></label>
+    <label>Data:<input type="date" id="dataEvento"/></label>
+    <button onclick="adicionarEvento()">Adicionar Evento</button>
+  </section>
+
+  <section id="comunicacaoForm" class="formulario">
+    <h2>Comunicação com Responsáveis</h2>
+    <label>Aluno:<input type="text" id="alunoMsg"/></label>
+    <label>Mensagem:<textarea id="mensagemMsg" rows="4"></textarea></label>
+    <button onclick="enviarMensagem()">Enviar Mensagem</button>
+  </section>
+
+  <section id="bibliotecaForm" class="formulario">
+  <h2>Biblioteca Inteligente</h2>
+  <label>Buscar Material (tema/palavra):<input type="text" id="materialBusca"/></label>
+  <label>Disciplina:
+    <select id="disciplinaBiblioteca">
+      <option value="">(todas)</option>
+      <option>Português</option>
+      <option>Matemática</option>
+      <option>Ciências</option>
+      <option>História</option>
+      <option>Geografia</option>
+    </select>
+  </label>
+  <label>Série/Ano:
+    <select id="anoBiblioteca">
+      <option value="">(todas)</option>
+      <option>1º ano</option>
+      <option>2º ano</option>
+      <option>3º ano</option>
+      <option>4º ano</option>
+      <option>5º ano</option>
+    </select>
+  </label>
+
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:5px">
+    <button onclick="buscarMaterial()">Buscar</button>
+    <button onclick="resumirMaterial()">Resumo Inteligente</button>
+    <button onclick="gerarTextoBiblioteca()">Gerar Texto/Conto (IA)</button>
+  </div>
+</section>
+
+
+  <section id="exportarForm" class="formulario">
+    <h2>Exportar Turmas</h2>
+    <button onclick="exportarExcel()">Exportar Excel</button>
+  </section>
+
+  <div id="resultado" class="resultado"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
